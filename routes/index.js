@@ -39,10 +39,13 @@ router.get('/meta_wa_callbackurl', (req, res) => {
 
 router.post('/meta_wa_callbackurl', async (req, res) => {
     console.log('POST: Someone is pinging me!');
-    try {
+    try {        
         let data = Whatsapp.parseMessage(req.body);
 
-        if (data?.isMessage) {
+        
+        if (data.isMessage) {
+            console.log(data.message)
+            
             let incomingMessage = data.message;
             let recipientPhone = incomingMessage.from.phone; // extract the phone number of sender
             let recipientName = incomingMessage.from.name;
@@ -355,3 +358,4 @@ router.post('/meta_wa_callbackurl', async (req, res) => {
 });
 
 module.exports = router;
+
