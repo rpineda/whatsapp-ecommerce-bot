@@ -2,9 +2,8 @@
 const request = require('request');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-const { resolve } = require('path');
 
-module.exports = class EcommerceStore {
+module.exports = class EcommerceStoreSyst {
     constructor() {}
     async _loginApi(endpoint) {
         return new Promise((resolve, reject) => {
@@ -23,15 +22,16 @@ module.exports = class EcommerceStore {
             };
 
             request(options, (error, res, body) => {
-                // if (error) throw new Error(error);
-                // console.log(body);
                 try {
                     if(error) {
                         reject(error)
                     } else {
+                        let writer = fs.createWriteStream('./../tokens/syst_access_token.json') 
+                        writer.write(JSON.stringify(body));
+
                         resolve({
                             status: 'success',
-                            data: JSON.parse(body)
+                            data: body.access_token
                         })
                     }
                 } catch (error) {
@@ -62,6 +62,10 @@ module.exports = class EcommerceStore {
                 }
             );
         });
+    }
+
+    async getApiToken() {
+        return await this._loginApi(`/oauth/v2/token`);
     }
 
     async getProductById(productId) {
